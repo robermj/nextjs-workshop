@@ -1,8 +1,53 @@
 import Head from 'next/head'
-import Image from 'next/image'
+import { useState, useEffect } from 'react'
+import Layout from '../components/Layout/Layout'
+import MoviesList from '../components/Movies/MoviesList'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+// Note: This code is not included in JS bundles
+export const getStaticProps = async (context) => {
+  try {
+    const response = await fetch('https://movies-71584-default-rtdb.firebaseio.com/movies.json')
+    const data = await response.json()
+
+    return {
+      props: {
+        movies: { ...data }
+      }
+    }
+  } catch (error) {
+
+    return {
+      props: {
+        movies: { error: 'Error: Could not get data' }
+      },
+      revalidate: 60
+    }
+  }
+}
+
+const Home = ({ movies }) => {
+  /* const [movies, setMovies] = useState({})
+
+  const _getMovies = async () => {
+    try {
+      const response = await fetch('https://movies-71584-default-rtdb.firebaseio.com/movies.json')
+      const data = await response.json()
+
+      setMovies(data)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  useEffect(() => {
+    _getMovies()
+  }, []) */
+
+  if(movies?.error) {
+    return <p>An error occured: {movies?.error}</p>
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -11,24 +56,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js Workshop</a>
-        </h1>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <Layout>
+        <MoviesList movies={movies} />
+      </Layout>
     </div>
   )
 }
+
+export default Home

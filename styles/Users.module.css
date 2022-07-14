@@ -1,0 +1,23 @@
+.usersList {
+  width: 90%;
+  flex-direction: column;
+  display: flex;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 6rem;
+  border-radius: 1rem;
+  margin: 1.5rem;
+  padding: 1rem;
+  color: white;
+  background-color: #212529;
+}
